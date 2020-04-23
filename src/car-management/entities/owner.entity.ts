@@ -1,5 +1,7 @@
+import { OwnerId } from '../types';
+
 export class Owner {
-  id: string;
-  name: string;
-  purchaseDate: Date;
+  private id: OwnerId;
+  private name: string;
+  private purchaseDate: Date;
 }

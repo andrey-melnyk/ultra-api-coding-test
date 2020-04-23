@@ -1,6 +1,8 @@
+import { ManufacturerId } from '../types';
+
 export class Manufacturer {
-  id: string;
-  name: string;
-  phone: string;
-  siret: number;
+  private id: ManufacturerId;
+  private name: string;
+  private phone: string;
+  private siret: number;
 }
