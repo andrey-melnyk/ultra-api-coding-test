@@ -1,12 +1,24 @@
 import { Manufacturer } from './manufacturer.entity';
 import { Owner } from './owner.entity';
 import { CarId } from '../types';
+import { Column, Entity, JoinTable, ManyToMany, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 
+@Entity()
 export class Car {
+  @PrimaryGeneratedColumn()
   private id: CarId;
+
+  @ManyToOne(type => Manufacturer)
   private manufacturer: Manufacturer;
+
+  @Column()
   private price: number;
+
+  @Column()
   private firstRegistrationDate: Date;
+
+  @ManyToMany(type => Owner)
+  @JoinTable()
   private owners: Owner[];
 
   constructor(
