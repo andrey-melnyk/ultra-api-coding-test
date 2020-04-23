@@ -1,7 +1,14 @@
 import { Manufacturer } from './manufacturer.entity';
 import { Owner } from './owner.entity';
 import { CarId } from '../types';
-import { Column, Entity, JoinTable, ManyToMany, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinTable,
+  ManyToMany,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 
 @Entity()
 export class Car {
