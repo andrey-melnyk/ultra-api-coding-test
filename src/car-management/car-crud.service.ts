@@ -1,52 +1,44 @@
 import { Injectable } from '@nestjs/common';
-import { In, Repository } from 'typeorm';
+import { EntityManager } from 'typeorm';
 import { Car } from './entities/car.entity';
-import { InjectRepository } from '@nestjs/typeorm';
+import { InjectEntityManager } from '@nestjs/typeorm';
 import { CarId } from './types';
-import { Manufacturer } from './entities/manufacturer.entity';
-import { Owner } from './entities/owner.entity';
 import { CreateCarDto } from './dto/create-car.dto';
+import { CarRepository } from './repositories/car.repository';
+import { ManufacturerRepository } from './repositories/manufacturer.repository';
+import { OwnerRepository } from './repositories/owner.repository';
 
 @Injectable()
 export class CarCRUDService {
-  private readonly carsRepository: Repository<Car>;
-  private readonly manufacturersRepository: Repository<Manufacturer>;
-  private readonly ownersRepository: Repository<Owner>;
+  private readonly entityManager: EntityManager;
+  private readonly carsRepository: CarRepository;
+  private readonly manufacturersRepository: ManufacturerRepository;
+  private readonly ownersRepository: OwnerRepository;
 
-  constructor(
-    @InjectRepository(Car)
-    carsRepository: Repository<Car>,
-    @InjectRepository(Manufacturer)
-    manufacturersRepository: Repository<Manufacturer>,
-    @InjectRepository(Owner)
-    ownersRepository: Repository<Owner>,
-  ) {
-    this.carsRepository = carsRepository;
-    this.manufacturersRepository = manufacturersRepository;
-    this.ownersRepository = ownersRepository;
+  constructor(@InjectEntityManager() entityManager: EntityManager) {
+    this.entityManager = entityManager;
+    this.carsRepository = entityManager.getCustomRepository(CarRepository);
+    this.manufacturersRepository = entityManager.getCustomRepository(ManufacturerRepository);
+    this.ownersRepository = entityManager.getCustomRepository(OwnerRepository);
   }
 
   public async getCarsList(): Promise<Car[]> {
-    return this.carsRepository.find();
+    return this.carsRepository.getAll();
   }
 
   public async getCarById(id: CarId): Promise<Car | undefined> {
-    return this.carsRepository.findOne({ where: { id } });
+    return this.carsRepository.findById(id);
   }
 
   public async createNewCar(createCarDTO: CreateCarDto): Promise<Car> {
-    const manufacturer = this.manufacturersRepository.findOne({
-      where: { id: createCarDTO.manufacturerId },
-    });
-    const owners = this.ownersRepository.find({
-      where: { id: In(createCarDTO.ownerIds) },
-    });
+    const manufacturer = await this.manufacturersRepository.findById(createCarDTO.manufacturerId);
+    const owners = await this.ownersRepository.findByIdsArray(createCarDTO.ownerIds);
 
     const car = Car.createNew(
       createCarDTO.price,
       createCarDTO.firstRegistrationDate,
-      await manufacturer,
-      await owners,
+      manufacturer,
+      owners,
     );
 
     return this.carsRepository.save(car);
