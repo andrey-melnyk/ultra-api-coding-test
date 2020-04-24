@@ -11,17 +11,28 @@ describe('Car entity', () => {
     testOwner,
   ]);
 
-  describe('Constructor', () => {
+  describe('CreateNew factory method', () => {
     it('pass incorrect price to constructor - should throw InvalidPriceException', () => {
       expect(() =>
         Car.createNew(-1000, new Date('01-01-2009'), testManufacturer, []),
       ).toThrowError(InvalidPriceException);
     });
 
-    it('should set firstRegistrationDate to current date instead of passed future date', () => {
+    it('pass incorrect firstRegistrationDate - should throw ', () => {
       expect(() =>
         Car.createNew(1000, new Date('01-01-2028'), testManufacturer, []),
       ).toThrowError(InvalidFirstRegistrationDateException);
+    });
+
+    it('pass correct params - should return Car instance', () => {
+      const car = Car.createNew(
+        1000,
+        new Date('01-01-2009'),
+        testManufacturer,
+        [],
+      );
+
+      expect(car).toBeInstanceOf(Car);
     });
   });
 
