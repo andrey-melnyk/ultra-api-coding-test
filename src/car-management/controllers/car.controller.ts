@@ -1,4 +1,15 @@
-import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, Post, Put, UseFilters } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  HttpCode,
+  HttpStatus,
+  Param,
+  Post,
+  Put,
+  UseFilters,
+} from '@nestjs/common';
 import { CarCRUDService } from '../car-crud.service';
 import { CarId } from '../types';
 import { CreateCarDto } from '../dto/create-car.dto';
@@ -17,7 +28,9 @@ export class CarController {
 
   @Get()
   public async getCarsList() {
-    return (await this.carCRUDService.getCarsList()).map((car: Car) => car.toDTO());
+    return (await this.carCRUDService.getCarsList()).map((car: Car) =>
+      car.toDTO(),
+    );
   }
 
   @Get(':id')

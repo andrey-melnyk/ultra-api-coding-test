@@ -51,7 +51,10 @@ export class CarCRUDService {
     return this.carsRepository.save(car);
   }
 
-  public async updateCarById(id: CarId, updateCarDTO: UpdateCarDTO): Promise<Car> {
+  public async updateCarById(
+    id: CarId,
+    updateCarDTO: UpdateCarDTO,
+  ): Promise<Car> {
     const car = await this.carsRepository.findById(id);
 
     const owners = await this.ownersRepository.findByIdsArray(

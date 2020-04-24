@@ -3,13 +3,11 @@ import { Manufacturer } from './manufacturer.entity';
 import { Owner } from './owner.entity';
 import { InvalidPriceException } from '../exceptions/invalid-price.exception';
 import { InvalidFirstRegistrationDateException } from '../exceptions/invalid-first-registration-date.exception';
+import { InvalidDiscountException } from '../exceptions/invalid-discount.exception';
 
 describe('Car entity', () => {
   const testManufacturer = new Manufacturer();
   const testOwner = new Owner();
-  const car = Car.createNew(1000, new Date('01-01-2009'), testManufacturer, [
-    testOwner,
-  ]);
 
   describe('CreateNew factory method', () => {
     it('pass incorrect price to constructor - should throw InvalidPriceException', () => {
@@ -37,6 +35,10 @@ describe('Car entity', () => {
   });
 
   describe('Method updatePrice', () => {
+    const car = Car.createNew(1000, new Date('01-01-2009'), testManufacturer, [
+      testOwner,
+    ]);
+
     it('set correct price - should set price to new value', () => {
       const newPrice = 123;
 
@@ -51,6 +53,27 @@ describe('Car entity', () => {
       expect(() => car.updatePrice(newPrice)).toThrowError(
         InvalidPriceException,
       );
+    });
+  });
+
+  describe('Method applyDiscount', () => {
+    const initialCarPrice = 1000;
+    const car = Car.createNew(initialCarPrice, new Date('01-01-2009'), testManufacturer, [
+      testOwner,
+    ]);
+
+    it('set correct discount - should subtract given discount from car price', () => {
+      car.applyDiscount(200);
+
+      expect(car.toDTO().price).toEqual(800);
+    });
+
+    it('set negative discount - should throw InvalidDiscountException', () => {
+      expect(() => car.applyDiscount(-200)).toThrowError(InvalidDiscountException);
+    });
+
+    it('set negative discount - should throw InvalidDiscountException', () => {
+      expect(() => car.applyDiscount(1200)).toThrowError(InvalidDiscountException);
     });
   });
 });

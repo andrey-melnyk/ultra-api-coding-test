@@ -12,6 +12,7 @@ import {
 import { CarDTO } from '../dto/car.dto';
 import { InvalidPriceException } from '../exceptions/invalid-price.exception';
 import { InvalidFirstRegistrationDateException } from '../exceptions/invalid-first-registration-date.exception';
+import { InvalidDiscountException } from '../exceptions/invalid-discount.exception';
 
 @Entity()
 export class Car {
@@ -57,6 +58,14 @@ export class Car {
 
   public updateOwnersList(owners: Owner[]): void {
     this.owners = owners;
+  }
+
+  public applyDiscount(discount: number): void {
+    if (discount < 0 || discount > this.price) {
+      throw new InvalidDiscountException();
+    }
+
+    this.updatePrice(this.price - discount);
   }
 
   private setFirstRegistrationDate(firstRegistrationDate: Date): void {
