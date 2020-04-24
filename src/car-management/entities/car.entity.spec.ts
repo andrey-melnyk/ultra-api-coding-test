@@ -1,35 +1,27 @@
 import { Car } from './car.entity';
 import { Manufacturer } from './manufacturer.entity';
 import { Owner } from './owner.entity';
+import { InvalidPriceException } from '../exceptions/invalid-price.exception';
+import { InvalidFirstRegistrationDateException } from '../exceptions/invalid-first-registration-date.exception';
 
 describe('Car entity', () => {
   const testManufacturer = new Manufacturer();
   const testOwner = new Owner();
-  const car = new Car(testManufacturer, 1000, new Date('01-01-2009'), [
+  const car = Car.createNew(1000, new Date('01-01-2009'), testManufacturer, [
     testOwner,
   ]);
 
   describe('Constructor', () => {
-    it('should set price to 0 instead of passed negative price', () => {
-      const testCar = new Car(
-        testManufacturer,
-        -1000,
-        new Date('01-01-2009'),
-        [],
-      );
-
-      expect(testCar.getPrice()).toEqual(0);
+    it('pass incorrect price to constructor - should throw InvalidPriceException', () => {
+      expect(() =>
+        Car.createNew(-1000, new Date('01-01-2009'), testManufacturer, []),
+      ).toThrowError(InvalidPriceException);
     });
 
     it('should set firstRegistrationDate to current date instead of passed future date', () => {
-      const testCar = new Car(
-        testManufacturer,
-        -1000,
-        new Date('01-01-2028'),
-        [],
-      );
-
-      expect(testCar.getFirstRegistrationDate()).toEqual(new Date());
+      expect(() =>
+        Car.createNew(1000, new Date('01-01-2028'), testManufacturer, []),
+      ).toThrowError(InvalidFirstRegistrationDateException);
     });
   });
 
@@ -39,15 +31,15 @@ describe('Car entity', () => {
 
       car.updatePrice(newPrice);
 
-      expect(car.getPrice()).toEqual(newPrice);
+      expect(car.toDTO().price).toEqual(newPrice);
     });
 
-    it('set correct price', () => {
+    it('set incorrect price - should throw InvalidPriceException', () => {
       const newPrice = -123;
 
-      car.updatePrice(newPrice);
-
-      expect(car.getPrice()).toEqual(0);
+      expect(() => car.updatePrice(newPrice)).toThrowError(
+        InvalidPriceException,
+      );
     });
   });
 });

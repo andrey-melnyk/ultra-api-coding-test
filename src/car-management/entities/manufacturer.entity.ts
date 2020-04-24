@@ -1,5 +1,6 @@
 import { ManufacturerId } from '../types';
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { ManufacturerDTO } from '../dto/manufacturer.dto';
 
 @Entity()
 export class Manufacturer {
@@ -14,4 +15,8 @@ export class Manufacturer {
 
   @Column()
   private siret: number;
+
+  public toDTO(): ManufacturerDTO {
+    return new ManufacturerDTO(this.id, this.name, this.phone, this.siret);
+  }
 }

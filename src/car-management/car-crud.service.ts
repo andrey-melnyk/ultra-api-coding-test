@@ -34,17 +34,6 @@ export class CarCRUDService {
     return this.carsRepository.findOne({ where: { id } });
   }
 
-  public async getCarManufacturerByCarId(
-    id: CarId,
-  ): Promise<Manufacturer | undefined> {
-    const car = await this.carsRepository.findOne({
-      where: { id },
-      relations: ['manufacturer'],
-    });
-
-    return car?.getManufacturer();
-  }
-
   public async createNewCar(createCarDTO: CreateCarDto): Promise<Car> {
     const manufacturer = this.manufacturersRepository.findOne({
       where: { id: createCarDTO.manufacturerId },
@@ -53,10 +42,10 @@ export class CarCRUDService {
       where: { id: In(createCarDTO.ownerIds) },
     });
 
-    const car = new Car(
-      await manufacturer,
+    const car = Car.createNew(
       createCarDTO.price,
       createCarDTO.firstRegistrationDate,
+      await manufacturer,
       await owners,
     );
 

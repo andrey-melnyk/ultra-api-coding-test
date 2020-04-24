@@ -7,6 +7,7 @@ import {
 } from '@nestjs/common';
 import { CarCRUDService } from '../car-crud.service';
 import { CarId } from '../types';
+import { CreateCarDto } from '../dto/create-car.dto';
 
 @Controller('/api/cars')
 export class CarController {
@@ -29,24 +30,29 @@ export class CarController {
       throw new NotFoundException();
     }
 
-    return car;
+    return car.toDTO();
   }
 
   @Get(':id/manufacturer')
   public async getCarManufacturerByCarId(@Param('id') id: CarId) {
-    const manufacturer = await this.carCRUDService.getCarManufacturerByCarId(
-      id,
-    );
+    const car = await this.carCRUDService.getCarById(id);
 
-    if (!manufacturer) {
+    if (!car) {
       throw new NotFoundException();
     }
 
-    return manufacturer;
+    return car.toDTO().manufacturer;
   }
 
   @Post()
   public createCar() {
-    return this.carCRUDService.createNewCar();
+    const createCarDTO = new CreateCarDto();
+
+    createCarDTO.price = 1000;
+    createCarDTO.firstRegistrationDate = new Date('01-01-2008');
+    createCarDTO.manufacturerId = '1';
+    createCarDTO.ownerIds = ['1'];
+
+    return this.carCRUDService.createNewCar(createCarDTO);
   }
 }

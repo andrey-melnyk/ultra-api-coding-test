@@ -9,14 +9,14 @@ import {
   ManyToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
+import { CarDTO } from '../dto/car.dto';
+import { InvalidPriceException } from '../exceptions/invalid-price.exception';
+import { InvalidFirstRegistrationDateException } from '../exceptions/invalid-first-registration-date.exception';
 
 @Entity()
 export class Car {
   @PrimaryGeneratedColumn()
   private id: CarId;
-
-  @ManyToOne(type => Manufacturer)
-  private manufacturer: Manufacturer;
 
   @Column()
   private price: number;
@@ -24,48 +24,52 @@ export class Car {
   @Column()
   private firstRegistrationDate: Date;
 
-  @ManyToMany(type => Owner)
+  @ManyToOne(type => Manufacturer, { eager: true })
+  private manufacturer: Manufacturer;
+
+  @ManyToMany(type => Owner, { eager: true })
   @JoinTable()
   private owners: Owner[];
 
-  constructor(
-    manufacturer: Manufacturer,
+  private constructor() {}
+
+  public static createNew(
     price: number,
     firstRegistrationDate: Date,
+    manufacturer: Manufacturer,
     owners: Owner[],
-  ) {
-    this.manufacturer = manufacturer;
-    this.updatePrice(price);
-    this.setFirstRegistrationDate(firstRegistrationDate);
-    this.owners = owners;
-  }
-
-  public getId(): CarId {
-    return this.id;
-  }
-
-  public getManufacturer(): Manufacturer {
-    return this.manufacturer;
-  }
-
-  public getPrice(): number {
-    return this.price;
+  ): Car {
+    const newCar = new Car();
+    newCar.updatePrice(price);
+    newCar.setFirstRegistrationDate(firstRegistrationDate);
+    newCar.manufacturer = manufacturer;
+    newCar.owners = owners;
+    return newCar;
   }
 
   public updatePrice(newPrice: number): void {
-    this.price = newPrice > 0 ? newPrice : 0;
-  }
+    if (newPrice < 0) {
+      throw new InvalidPriceException();
+    }
 
-  public getFirstRegistrationDate(): Date {
-    return this.firstRegistrationDate;
-  }
-
-  public getOwners(): Owner[] {
-    return this.owners;
+    this.price = newPrice;
   }
 
   private setFirstRegistrationDate(firstRegistrationDate: Date): void {
-    this.firstRegistrationDate =
-      firstRegistrationDate <= new Date() ? firstRegistrationDate : new Date();
+    if (firstRegistrationDate.getTime() > new Date().getTime()) {
+      throw new InvalidFirstRegistrationDateException();
+    }
+
+    this.firstRegistrationDate = firstRegistrationDate;
+  }
+
+  public toDTO(): CarDTO {
+    return new CarDTO(
+      this.id,
+      this.price,
+      this.firstRegistrationDate,
+      this.manufacturer.toDTO(),
+      this.owners.map((owner: Owner) => owner.toDTO()),
+    );
   }
 }
