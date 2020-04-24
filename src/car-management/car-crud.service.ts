@@ -63,4 +63,10 @@ export class CarCRUDService {
 
     return this.carsRepository.save(car);
   }
+
+  public async deleteCarById(id: CarId): Promise<void> {
+    const car = await this.carsRepository.findById(id);
+
+    await this.carsRepository.remove(car);
+  }
 }

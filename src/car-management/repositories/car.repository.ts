@@ -22,4 +22,8 @@ export class CarRepository extends AbstractRepository<Car> {
   public save(car: Car): Promise<Car> {
     return this.repository.save(car);
   }
+
+  public remove(car: Car): Promise<Car> {
+    return this.repository.remove(car);
+  }
 }

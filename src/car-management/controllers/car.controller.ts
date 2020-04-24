@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, Put, UseFilters } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, Post, Put, UseFilters } from '@nestjs/common';
 import { CarCRUDService } from '../car-crud.service';
 import { CarId } from '../types';
 import { CreateCarDto } from '../dto/create-car.dto';
@@ -45,5 +45,11 @@ export class CarController {
     const car = await this.carCRUDService.updateCarById(id, body);
 
     return car.toDTO();
+  }
+
+  @Delete(':id')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  public async deleteCar(@Param('id') id: CarId) {
+    await this.carCRUDService.deleteCarById(id);
   }
 }
