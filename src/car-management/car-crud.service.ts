@@ -7,6 +7,7 @@ import { CreateCarDto } from './dto/create-car.dto';
 import { CarRepository } from './repositories/car.repository';
 import { ManufacturerRepository } from './repositories/manufacturer.repository';
 import { OwnerRepository } from './repositories/owner.repository';
+import { UpdateCarDTO } from './dto/update-car.dto';
 
 @Injectable()
 export class CarCRUDService {
@@ -46,6 +47,19 @@ export class CarCRUDService {
       manufacturer,
       owners,
     );
+
+    return this.carsRepository.save(car);
+  }
+
+  public async updateCarById(id: CarId, updateCarDTO: UpdateCarDTO): Promise<Car> {
+    const car = await this.carsRepository.findById(id);
+
+    const owners = await this.ownersRepository.findByIdsArray(
+      updateCarDTO.ownerIds,
+    );
+
+    car.updatePrice(updateCarDTO.price);
+    car.updateOwnersList(owners);
 
     return this.carsRepository.save(car);
   }

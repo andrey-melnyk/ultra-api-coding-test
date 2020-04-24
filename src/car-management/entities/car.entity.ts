@@ -55,6 +55,10 @@ export class Car {
     this.price = newPrice;
   }
 
+  public updateOwnersList(owners: Owner[]): void {
+    this.owners = owners;
+  }
+
   private setFirstRegistrationDate(firstRegistrationDate: Date): void {
     if (firstRegistrationDate.getTime() > new Date().getTime()) {
       throw new InvalidFirstRegistrationDateException();

@@ -1,8 +1,9 @@
-import { Body, Controller, Get, Param, Post, UseFilters } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Put, UseFilters } from '@nestjs/common';
 import { CarCRUDService } from '../car-crud.service';
 import { CarId } from '../types';
 import { CreateCarDto } from '../dto/create-car.dto';
 import { DomainExceptionsFilter } from '../exceptions-filters/domain-exceptions.filter';
+import { UpdateCarDTO } from '../dto/update-car.dto';
 
 @UseFilters(DomainExceptionsFilter)
 @Controller('/api/cars')
@@ -34,6 +35,15 @@ export class CarController {
 
   @Post()
   public async createCar(@Body() body: CreateCarDto) {
-    return (await this.carCRUDService.createNewCar(body)).toDTO();
+    const car = await this.carCRUDService.createNewCar(body);
+
+    return car.toDTO();
+  }
+
+  @Put(':id')
+  public async updateCar(@Param('id') id: CarId, @Body() body: UpdateCarDTO) {
+    const car = await this.carCRUDService.updateCarById(id, body);
+
+    return car.toDTO();
   }
 }
