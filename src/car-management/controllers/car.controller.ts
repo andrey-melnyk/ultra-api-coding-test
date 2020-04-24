@@ -1,4 +1,5 @@
 import {
+  Body,
   Controller,
   Get,
   NotFoundException,
@@ -45,14 +46,7 @@ export class CarController {
   }
 
   @Post()
-  public createCar() {
-    const createCarDTO = new CreateCarDto();
-
-    createCarDTO.price = 1000;
-    createCarDTO.firstRegistrationDate = new Date('01-01-2008');
-    createCarDTO.manufacturerId = '1';
-    createCarDTO.ownerIds = ['1'];
-
-    return this.carCRUDService.createNewCar(createCarDTO);
+  public async createCar(@Body() body: CreateCarDto) {
+    return (await this.carCRUDService.createNewCar(body)).toDTO();
   }
 }
