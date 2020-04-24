@@ -19,6 +19,12 @@ export class CarRepository extends AbstractRepository<Car> {
     return this.repository.find();
   }
 
+  public async getCarsRegisteredInPeriod(from: Date, to: Date): Promise<Car[]> {
+    return [];
+    // this.repository.createQueryBuilder('car')
+    //   .where('car.firstRegistrationDate ')
+  }
+
   public save(car: Car): Promise<Car> {
     return this.repository.save(car);
   }

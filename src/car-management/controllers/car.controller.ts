@@ -10,7 +10,7 @@ import {
   Put,
   UseFilters,
 } from '@nestjs/common';
-import { CarCRUDService } from '../car-crud.service';
+import { CarCRUDService } from '../services/car-crud.service';
 import { CarId } from '../types';
 import { CreateCarDto } from '../dto/create-car.dto';
 import { DomainExceptionsFilter } from '../exceptions-filters/domain-exceptions.filter';
