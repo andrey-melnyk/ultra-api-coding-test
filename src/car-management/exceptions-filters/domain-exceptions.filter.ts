@@ -2,7 +2,6 @@ import {
   ArgumentsHost,
   BadRequestException,
   Catch,
-  ExceptionFilter,
   NotFoundException,
 } from '@nestjs/common';
 import { BaseExceptionFilter } from '@nestjs/core';
@@ -11,10 +10,13 @@ import { InvalidPriceException } from '../exceptions/invalid-price.exception';
 import { EntityNotFoundException } from '../exceptions/entity-not-found.exception';
 
 @Catch()
-export class DomainExceptionsFilter extends BaseExceptionFilter implements ExceptionFilter {
+export class DomainExceptionsFilter extends BaseExceptionFilter {
   catch(exception: unknown, host: ArgumentsHost): any {
     if (exception instanceof InvalidFirstRegistrationDateException) {
-      return super.catch(new BadRequestException('Invalid first registration date'), host);
+      return super.catch(
+        new BadRequestException('Invalid first registration date'),
+        host,
+      );
     }
 
     if (exception instanceof InvalidPriceException) {

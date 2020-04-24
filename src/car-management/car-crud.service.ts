@@ -18,7 +18,9 @@ export class CarCRUDService {
   constructor(@InjectEntityManager() entityManager: EntityManager) {
     this.entityManager = entityManager;
     this.carsRepository = entityManager.getCustomRepository(CarRepository);
-    this.manufacturersRepository = entityManager.getCustomRepository(ManufacturerRepository);
+    this.manufacturersRepository = entityManager.getCustomRepository(
+      ManufacturerRepository,
+    );
     this.ownersRepository = entityManager.getCustomRepository(OwnerRepository);
   }
 
@@ -31,8 +33,12 @@ export class CarCRUDService {
   }
 
   public async createNewCar(createCarDTO: CreateCarDto): Promise<Car> {
-    const manufacturer = await this.manufacturersRepository.findById(createCarDTO.manufacturerId);
-    const owners = await this.ownersRepository.findByIdsArray(createCarDTO.ownerIds);
+    const manufacturer = await this.manufacturersRepository.findById(
+      createCarDTO.manufacturerId,
+    );
+    const owners = await this.ownersRepository.findByIdsArray(
+      createCarDTO.ownerIds,
+    );
 
     const car = Car.createNew(
       createCarDTO.price,

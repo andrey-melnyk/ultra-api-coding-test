@@ -1,10 +1,4 @@
-import {
-  Body,
-  Controller,
-  Get,
-  Param,
-  Post, UseFilters,
-} from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, UseFilters } from '@nestjs/common';
 import { CarCRUDService } from '../car-crud.service';
 import { CarId } from '../types';
 import { CreateCarDto } from '../dto/create-car.dto';
