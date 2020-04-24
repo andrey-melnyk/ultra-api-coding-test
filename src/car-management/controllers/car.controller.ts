@@ -4,6 +4,7 @@ import { CarId } from '../types';
 import { CreateCarDto } from '../dto/create-car.dto';
 import { DomainExceptionsFilter } from '../exceptions-filters/domain-exceptions.filter';
 import { UpdateCarDTO } from '../dto/update-car.dto';
+import { Car } from '../entities/car.entity';
 
 @UseFilters(DomainExceptionsFilter)
 @Controller('/api/cars')
@@ -15,8 +16,8 @@ export class CarController {
   }
 
   @Get()
-  public getCarsList() {
-    return this.carCRUDService.getCarsList();
+  public async getCarsList() {
+    return (await this.carCRUDService.getCarsList()).map((car: Car) => car.toDTO());
   }
 
   @Get(':id')
