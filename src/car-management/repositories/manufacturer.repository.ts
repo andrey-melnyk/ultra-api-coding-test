@@ -1,10 +1,17 @@
 import { AbstractRepository, EntityRepository } from 'typeorm';
 import { ManufacturerId } from '../types';
 import { Manufacturer } from '../entities/manufacturer.entity';
+import { EntityNotFoundException } from '../exceptions/entity-not-found.exception';
 
 @EntityRepository(Manufacturer)
 export class ManufacturerRepository extends AbstractRepository<Manufacturer> {
-  public findById(id: ManufacturerId): Promise<Manufacturer> {
-    return this.repository.findOne({ where: { id } })
+  public async findById(id: ManufacturerId): Promise<Manufacturer> {
+    const manufacturer = await this.repository.findOne({ where: { id } });
+
+    if (!manufacturer) {
+      throw new EntityNotFoundException('Manufacturer not found');
+    }
+
+    return manufacturer;
   }
 }
