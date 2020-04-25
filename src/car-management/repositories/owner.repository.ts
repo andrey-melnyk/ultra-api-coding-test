@@ -14,8 +14,8 @@ export class OwnerRepository extends AbstractRepository<Owner> {
 
   public async findWithPurchaseDateBefore(date: Date): Promise<Owner[]> {
     return this.repository
-        .createQueryBuilder('owner')
-        .where('owner.purchaseDate < DATE(:date)', { date })
-        .getMany();
+      .createQueryBuilder('owner')
+      .where('owner.purchaseDate < DATE(:date)', { date })
+      .getMany();
   }
 }

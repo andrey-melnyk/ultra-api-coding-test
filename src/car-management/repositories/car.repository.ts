@@ -2,7 +2,6 @@ import { AbstractRepository, EntityRepository } from 'typeorm';
 import { Car } from '../entities/car.entity';
 import { CarId } from '../types';
 import { EntityNotFoundException } from '../exceptions/entity-not-found.exception';
-import { Manufacturer } from '../entities/manufacturer.entity';
 
 @EntityRepository(Car)
 export class CarRepository extends AbstractRepository<Car> {

@@ -4,8 +4,8 @@ import { CarRepository } from '../repositories/car.repository';
 import { EntityManager } from 'typeorm';
 import { Car } from '../entities/car.entity';
 import { CarDiscountCalculator } from '../car-discount-calculator.class';
-import { Owner } from "../entities/owner.entity";
-import { OwnerRepository } from "../repositories/owner.repository";
+import { Owner } from '../entities/owner.entity';
+import { OwnerRepository } from '../repositories/owner.repository';
 
 @Injectable()
 export class CarMarketService {
@@ -50,8 +50,10 @@ export class CarMarketService {
   public async removeOwnersBoughtCarsBeforeDate(date: Date): Promise<Owner[]> {
     const owners = await this.ownersRepository.findWithPurchaseDateBefore(date);
 
-    return await this.entityManager.transaction<Owner[]>((transactionalEntityManager: EntityManager) => {
-      return transactionalEntityManager.remove(owners);
-    });
+    return await this.entityManager.transaction<Owner[]>(
+      (transactionalEntityManager: EntityManager) => {
+        return transactionalEntityManager.remove(owners);
+      },
+    );
   }
 }
