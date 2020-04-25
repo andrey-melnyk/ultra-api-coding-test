@@ -1,8 +1,4 @@
-import {
-  registerDecorator,
-  ValidationArguments,
-  ValidationOptions,
-} from 'class-validator';
+import { registerDecorator, ValidationOptions } from 'class-validator';
 
 export function NotFutureDate(validationOptions?: ValidationOptions) {
   return (object: object, propertyName: string) => {
@@ -12,7 +8,7 @@ export function NotFutureDate(validationOptions?: ValidationOptions) {
       propertyName,
       options: validationOptions,
       validator: {
-        validate(value: any, args: ValidationArguments) {
+        validate(value: any) {
           const date = new Date();
           date.setDate(new Date().getDate());
           date.setHours(0, 0, 0, 0);

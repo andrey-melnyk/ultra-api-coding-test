@@ -10,7 +10,9 @@ export class CreateCarDto {
 
   @IsNotEmpty()
   @IsDate()
-  @NotFutureDate()
+  @NotFutureDate({
+    message: 'firstRegistrationDate must be earlier than today',
+  })
   firstRegistrationDate: Date;
 
   @IsNotEmpty()

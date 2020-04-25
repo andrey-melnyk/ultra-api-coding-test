@@ -25,13 +25,14 @@ export class Car {
   @Column()
   private firstRegistrationDate: Date;
 
-  @ManyToOne(type => Manufacturer, { eager: true })
+  @ManyToOne(() => Manufacturer, { eager: true })
   private manufacturer: Manufacturer;
 
-  @ManyToMany(type => Owner, { eager: true })
+  @ManyToMany(() => Owner, { eager: true })
   @JoinTable()
   private owners: Owner[];
 
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
   private constructor() {}
 
   public static createNew(
@@ -46,6 +47,10 @@ export class Car {
     newCar.manufacturer = manufacturer;
     newCar.owners = owners;
     return newCar;
+  }
+
+  public getPrice(): number {
+    return this.price;
   }
 
   public updatePrice(newPrice: number): void {

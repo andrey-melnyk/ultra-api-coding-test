@@ -6,10 +6,11 @@ import { Car } from './entities/car.entity';
 import { Manufacturer } from './entities/manufacturer.entity';
 import { Owner } from './entities/owner.entity';
 import { CarDiscountCalculator } from './car-discount-calculator.class';
+import { CarMarketService } from './services/car-market.service';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Car, Manufacturer, Owner])],
-  providers: [CarCRUDService, CarDiscountCalculator],
+  providers: [CarDiscountCalculator, CarMarketService, CarCRUDService],
   controllers: [CarController],
 })
 export class CarManagementModule {}

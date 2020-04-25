@@ -58,9 +58,12 @@ describe('Car entity', () => {
 
   describe('Method applyDiscount', () => {
     const initialCarPrice = 1000;
-    const car = Car.createNew(initialCarPrice, new Date('01-01-2009'), testManufacturer, [
-      testOwner,
-    ]);
+    const car = Car.createNew(
+      initialCarPrice,
+      new Date('01-01-2009'),
+      testManufacturer,
+      [testOwner],
+    );
 
     it('set correct discount - should subtract given discount from car price', () => {
       car.applyDiscount(200);
@@ -69,11 +72,15 @@ describe('Car entity', () => {
     });
 
     it('set negative discount - should throw InvalidDiscountException', () => {
-      expect(() => car.applyDiscount(-200)).toThrowError(InvalidDiscountException);
+      expect(() => car.applyDiscount(-200)).toThrowError(
+        InvalidDiscountException,
+      );
     });
 
     it('set negative discount - should throw InvalidDiscountException', () => {
-      expect(() => car.applyDiscount(1200)).toThrowError(InvalidDiscountException);
+      expect(() => car.applyDiscount(1200)).toThrowError(
+        InvalidDiscountException,
+      );
     });
   });
 });

@@ -8,6 +8,7 @@ import { BaseExceptionFilter } from '@nestjs/core';
 import { InvalidFirstRegistrationDateException } from '../exceptions/invalid-first-registration-date.exception';
 import { InvalidPriceException } from '../exceptions/invalid-price.exception';
 import { EntityNotFoundException } from '../exceptions/entity-not-found.exception';
+import { InvalidDiscountException } from "../exceptions/invalid-discount.exception";
 
 @Catch()
 export class DomainExceptionsFilter extends BaseExceptionFilter {
@@ -21,6 +22,10 @@ export class DomainExceptionsFilter extends BaseExceptionFilter {
 
     if (exception instanceof InvalidPriceException) {
       return super.catch(new BadRequestException('Invalid price'), host);
+    }
+
+    if (exception instanceof InvalidDiscountException) {
+      return super.catch(new BadRequestException('Invalid discount'), host);
     }
 
     if (exception instanceof EntityNotFoundException) {

@@ -2,6 +2,7 @@ import { AbstractRepository, EntityRepository } from 'typeorm';
 import { Car } from '../entities/car.entity';
 import { CarId } from '../types';
 import { EntityNotFoundException } from '../exceptions/entity-not-found.exception';
+import { Manufacturer } from '../entities/manufacturer.entity';
 
 @EntityRepository(Car)
 export class CarRepository extends AbstractRepository<Car> {
@@ -20,9 +21,15 @@ export class CarRepository extends AbstractRepository<Car> {
   }
 
   public async getCarsRegisteredInPeriod(from: Date, to: Date): Promise<Car[]> {
-    return [];
-    // this.repository.createQueryBuilder('car')
-    //   .where('car.firstRegistrationDate ')
+    return this.repository
+      .createQueryBuilder('car')
+      .where('car.firstRegistrationDate BETWEEN DATE(:from) AND DATE(:to)', {
+        from,
+        to,
+      })
+      .leftJoinAndSelect('car.manufacturer', 'manufacturer')
+      .leftJoinAndSelect('car.owners', 'owner')
+      .getMany();
   }
 
   public save(car: Car): Promise<Car> {

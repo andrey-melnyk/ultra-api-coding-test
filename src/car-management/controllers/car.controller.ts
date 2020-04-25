@@ -16,14 +16,39 @@ import { CreateCarDto } from '../dto/create-car.dto';
 import { DomainExceptionsFilter } from '../exceptions-filters/domain-exceptions.filter';
 import { UpdateCarDTO } from '../dto/update-car.dto';
 import { Car } from '../entities/car.entity';
+import { CarMarketService } from '../services/car-market.service';
 
 @UseFilters(DomainExceptionsFilter)
 @Controller('/api/cars')
 export class CarController {
   private readonly carCRUDService: CarCRUDService;
+  private readonly carMarketService: CarMarketService;
 
-  constructor(carCrudService: CarCRUDService) {
+  constructor(
+    carCrudService: CarCRUDService,
+    carMarketService: CarMarketService,
+  ) {
     this.carCRUDService = carCrudService;
+    this.carMarketService = carMarketService;
+  }
+
+  @Get('/process')
+  public async triggerProcess() {
+    const date = new Date();
+    const from = new Date(new Date().setMonth(date.getMonth() - 18));
+    const to = new Date(new Date().setMonth(date.getMonth() - 12));
+
+    console.log(from, to);
+    const discount = 20;
+    const updatedCars = this.carMarketService.applyDiscountToCarsRegisteredInPeriod(
+      from,
+      to,
+      discount,
+    );
+
+    return {
+      updatedCars: (await updatedCars).map((car: Car) => car.toDTO()),
+    };
   }
 
   @Get()
