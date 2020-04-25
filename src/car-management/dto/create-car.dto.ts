@@ -1,4 +1,4 @@
-import { ManufacturerId, OwnerId } from '../types';
+import { ManufacturerId, OwnerId } from '../types/types';
 import { IsDate, IsNotEmpty, IsNumber, Min } from 'class-validator';
 import { NotFutureDate } from '../../common/validation-decorators/not-future-date.decorator';
 

@@ -2,18 +2,19 @@ import { CarDiscountCalculator } from './car-discount-calculator.class';
 
 describe('Car discount calculator', () => {
   describe('Method calculatePercentDiscount', () => {
-    const discountCalculator = new CarDiscountCalculator();
+    const discountCalculator = new CarDiscountCalculator(20);
 
     it('test correct discount calculation', () => {
       const testArguments = [
-        { carPrice: 1000, discountPercent: 50, expectedResult: 500 },
-        { carPrice: 1000, discountPercent: 20, expectedResult: 200 },
-        { carPrice: 1000, discountPercent: 80, expectedResult: 800 },
-        { carPrice: 1000, discountPercent: 30, expectedResult: 300 },
+        { carPrice: 500, expectedResult: 100 },
+        { carPrice: 1000, expectedResult: 200 },
+        { carPrice: 2000, expectedResult: 400 },
       ];
 
-      for (let argument of testArguments) {
-        expect(discountCalculator.calculatePercentDiscount(argument.carPrice, argument.discountPercent)).toEqual(argument.expectedResult);
+      for (const argument of testArguments) {
+        expect(
+          discountCalculator.calculatePercentDiscount(argument.carPrice),
+        ).toEqual(argument.expectedResult);
       }
     });
   });

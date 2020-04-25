@@ -6,8 +6,8 @@ import { InvalidFirstRegistrationDateException } from '../exceptions/invalid-fir
 import { InvalidDiscountException } from '../exceptions/invalid-discount.exception';
 
 describe('Car entity', () => {
-  const testManufacturer = new Manufacturer();
-  const testOwner = new Owner();
+  const testManufacturer = Manufacturer.createNew('BMW', '123-123-123', 123);
+  const testOwner = Owner.createNew('John Doe', new Date('01-01-2016'));
 
   describe('CreateNew factory method', () => {
     it('pass incorrect price to constructor - should throw InvalidPriceException', () => {

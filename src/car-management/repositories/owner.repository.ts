@@ -1,5 +1,5 @@
 import { AbstractRepository, EntityRepository, In } from 'typeorm';
-import { OwnerId } from '../types';
+import { OwnerId } from '../types/types';
 import { Owner } from '../entities/owner.entity';
 
 @EntityRepository(Owner)

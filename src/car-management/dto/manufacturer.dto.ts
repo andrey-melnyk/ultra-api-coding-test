@@ -1,4 +1,4 @@
-import { ManufacturerId } from '../types';
+import { ManufacturerId } from '../types/types';
 
 export class ManufacturerDTO {
   public readonly id: ManufacturerId;

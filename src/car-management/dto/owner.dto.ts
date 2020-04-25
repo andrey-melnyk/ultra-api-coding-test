@@ -1,4 +1,4 @@
-import { OwnerId } from '../types';
+import { OwnerId } from '../types/types';
 
 export class OwnerDTO {
   public readonly id: OwnerId;

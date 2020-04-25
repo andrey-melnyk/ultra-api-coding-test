@@ -1,22 +1,23 @@
 import { Manufacturer } from './manufacturer.entity';
 import { Owner } from './owner.entity';
-import { CarId } from '../types';
+import { CarId } from '../types/types';
 import {
   Column,
   Entity,
   JoinTable,
   ManyToMany,
   ManyToOne,
-  PrimaryGeneratedColumn,
+  PrimaryColumn,
 } from 'typeorm';
 import { CarDTO } from '../dto/car.dto';
 import { InvalidPriceException } from '../exceptions/invalid-price.exception';
 import { InvalidFirstRegistrationDateException } from '../exceptions/invalid-first-registration-date.exception';
 import { InvalidDiscountException } from '../exceptions/invalid-discount.exception';
+import { v4 as uuidv4 } from 'uuid';
 
 @Entity()
 export class Car {
-  @PrimaryGeneratedColumn()
+  @PrimaryColumn()
   private id: CarId;
 
   @Column()
@@ -42,10 +43,13 @@ export class Car {
     owners: Owner[],
   ): Car {
     const newCar = new Car();
+
+    newCar.id = uuidv4();
     newCar.updatePrice(price);
-    newCar.setFirstRegistrationDate(firstRegistrationDate);
+    newCar.initFirstRegistrationDate(firstRegistrationDate);
     newCar.manufacturer = manufacturer;
     newCar.owners = owners;
+
     return newCar;
   }
 
@@ -73,8 +77,11 @@ export class Car {
     this.updatePrice(this.price - discount);
   }
 
-  private setFirstRegistrationDate(firstRegistrationDate: Date): void {
-    if (firstRegistrationDate.getTime() > new Date().getTime()) {
+  private initFirstRegistrationDate(firstRegistrationDate: Date): void {
+    if (
+      Number.isNaN(firstRegistrationDate.getTime()) ||
+      firstRegistrationDate.getTime() > new Date().getTime()
+    ) {
       throw new InvalidFirstRegistrationDateException();
     }
 

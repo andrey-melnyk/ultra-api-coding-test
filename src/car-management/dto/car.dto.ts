@@ -1,4 +1,4 @@
-import { CarId } from '../types';
+import { CarId } from '../types/types';
 import { ManufacturerDTO } from './manufacturer.dto';
 import { OwnerDTO } from './owner.dto';
 

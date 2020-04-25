@@ -11,7 +11,7 @@ import {
   UseFilters,
 } from '@nestjs/common';
 import { CarCRUDService } from '../services/car-crud.service';
-import { CarId } from '../types';
+import { CarId } from '../types/types';
 import { CreateCarDto } from '../dto/create-car.dto';
 import { DomainExceptionsFilter } from '../exceptions-filters/domain-exceptions.filter';
 import { UpdateCarDTO } from '../dto/update-car.dto';
@@ -35,20 +35,8 @@ export class CarController {
 
   @Get('/process')
   public async triggerProcess() {
-    const date = new Date();
-    const from = new Date(new Date().setMonth(date.getMonth() - 18));
-    const to = new Date(new Date().setMonth(date.getMonth() - 12));
-    const discount = 20;
-    const updatedCars = this.carMarketService.applyDiscountToCarsRegisteredInPeriod(
-      from,
-      to,
-      discount,
-    );
-
-    const beforeDate = new Date(new Date().setMonth(date.getMonth() - 18));
-    const removedOwners = this.carMarketService.removeOwnersBoughtCarsBeforeDate(
-      beforeDate,
-    );
+    const updatedCars = this.carMarketService.applyDiscountToCarsRegisteredInPeriod();
+    const removedOwners = this.carMarketService.removeOwnersBoughtCarsBeforeDate();
 
     return {
       updatedCars: (await updatedCars).map((car: Car) => car.toDTO()),

@@ -1,6 +1,6 @@
 import { AbstractRepository, EntityRepository } from 'typeorm';
 import { Car } from '../entities/car.entity';
-import { CarId } from '../types';
+import { CarId } from '../types/types';
 import { EntityNotFoundException } from '../exceptions/entity-not-found.exception';
 
 @EntityRepository(Car)

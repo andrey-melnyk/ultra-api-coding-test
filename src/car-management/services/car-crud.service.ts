@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { EntityManager } from 'typeorm';
 import { Car } from '../entities/car.entity';
 import { InjectEntityManager } from '@nestjs/typeorm';
-import { CarId } from '../types';
+import { CarId } from '../types/types';
 import { CreateCarDto } from '../dto/create-car.dto';
 import { CarRepository } from '../repositories/car.repository';
 import { ManufacturerRepository } from '../repositories/manufacturer.repository';

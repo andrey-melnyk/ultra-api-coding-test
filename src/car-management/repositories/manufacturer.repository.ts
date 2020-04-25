@@ -1,5 +1,5 @@
 import { AbstractRepository, EntityRepository } from 'typeorm';
-import { ManufacturerId } from '../types';
+import { ManufacturerId } from '../types/types';
 import { Manufacturer } from '../entities/manufacturer.entity';
 import { EntityNotFoundException } from '../exceptions/entity-not-found.exception';
 
