@@ -6,6 +6,7 @@ services:
       - ../../:/home/node/app
     depends_on:
       - database
+      - database_test
     ports:
       - $APP_PORT:3000
     tty: true
@@ -13,7 +14,8 @@ services:
     environment:
       NODE_ENV: $NODE_ENV
       DATABASE_TYPE: $DATABASE_TYPE
-      DATABASE_HOST: $DATABASE_HOST
+      DATABASE_HOST: database
+      DATABASE_TEST_HOST: database_test
       DATABASE_USER: $MYSQL_USERNAME
       DATABASE_PASS: $MYSQL_PASSWORD
       DATABASE_NAME: $MYSQL_DATABASE
@@ -23,6 +25,17 @@ services:
       - ./data/mysql:/var/lib/mysql
     ports:
       - $DATABASE_PORT:3306
+    command: "--default-authentication-plugin=mysql_native_password"
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: $MYSQL_ROOT_PASSWORD
+      MYSQL_DATABASE: $MYSQL_DATABASE
+      MYSQL_USERNAME: $MYSQL_USERNAME
+      MYSQL_PASSWORD: $MYSQL_PASSWORD
+  database_test:
+    image: mysql:8
+    ports:
+      - 3307:3306
     command: "--default-authentication-plugin=mysql_native_password"
     restart: always
     environment:
