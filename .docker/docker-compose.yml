@@ -3,7 +3,7 @@ services:
   application:
     build: builds/node
     volumes:
-      - ../../:/home/node/app
+      - ../:/home/node/app
     depends_on:
       - database
       - database_test
