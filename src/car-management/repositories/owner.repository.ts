@@ -11,4 +11,11 @@ export class OwnerRepository extends AbstractRepository<Owner> {
 
     return this.repository.find({ where: { id: In(ids) } });
   }
+
+  public async findWithPurchaseDateBefore(date: Date): Promise<Owner[]> {
+    return this.repository
+        .createQueryBuilder('owner')
+        .where('owner.purchaseDate < DATE(:date)', { date })
+        .getMany();
+  }
 }

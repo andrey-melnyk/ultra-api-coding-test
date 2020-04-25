@@ -4,11 +4,14 @@ import { CarRepository } from '../repositories/car.repository';
 import { EntityManager } from 'typeorm';
 import { Car } from '../entities/car.entity';
 import { CarDiscountCalculator } from '../car-discount-calculator.class';
+import { Owner } from "../entities/owner.entity";
+import { OwnerRepository } from "../repositories/owner.repository";
 
 @Injectable()
 export class CarMarketService {
   private readonly entityManager: EntityManager;
-  private readonly carRepository: CarRepository;
+  private readonly carsRepository: CarRepository;
+  private readonly ownersRepository: OwnerRepository;
   private readonly discountCalculator: CarDiscountCalculator;
 
   constructor(
@@ -16,7 +19,8 @@ export class CarMarketService {
     discountCalculator: CarDiscountCalculator,
   ) {
     this.entityManager = entityManager;
-    this.carRepository = entityManager.getCustomRepository(CarRepository);
+    this.carsRepository = entityManager.getCustomRepository(CarRepository);
+    this.ownersRepository = entityManager.getCustomRepository(OwnerRepository);
     this.discountCalculator = discountCalculator;
   }
 
@@ -25,7 +29,7 @@ export class CarMarketService {
     to: Date,
     discountPercent: number,
   ): Promise<Car[]> {
-    const cars = await this.carRepository.getCarsRegisteredInPeriod(from, to);
+    const cars = await this.carsRepository.getCarsRegisteredInPeriod(from, to);
 
     return await this.entityManager.transaction<Car[]>(
       (transactionalEntityManager: EntityManager) => {
@@ -41,5 +45,13 @@ export class CarMarketService {
         return transactionalEntityManager.save(cars);
       },
     );
+  }
+
+  public async removeOwnersBoughtCarsBeforeDate(date: Date): Promise<Owner[]> {
+    const owners = await this.ownersRepository.findWithPurchaseDateBefore(date);
+
+    return await this.entityManager.transaction<Owner[]>((transactionalEntityManager: EntityManager) => {
+      return transactionalEntityManager.remove(owners);
+    });
   }
 }

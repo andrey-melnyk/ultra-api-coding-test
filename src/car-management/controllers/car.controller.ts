@@ -17,6 +17,7 @@ import { DomainExceptionsFilter } from '../exceptions-filters/domain-exceptions.
 import { UpdateCarDTO } from '../dto/update-car.dto';
 import { Car } from '../entities/car.entity';
 import { CarMarketService } from '../services/car-market.service';
+import { Owner } from "../entities/owner.entity";
 
 @UseFilters(DomainExceptionsFilter)
 @Controller('/api/cars')
@@ -37,8 +38,6 @@ export class CarController {
     const date = new Date();
     const from = new Date(new Date().setMonth(date.getMonth() - 18));
     const to = new Date(new Date().setMonth(date.getMonth() - 12));
-
-    console.log(from, to);
     const discount = 20;
     const updatedCars = this.carMarketService.applyDiscountToCarsRegisteredInPeriod(
       from,
@@ -46,8 +45,12 @@ export class CarController {
       discount,
     );
 
+    const beforeDate = new Date(new Date().setMonth(date.getMonth() - 18));
+    const removedOwners = this.carMarketService.removeOwnersBoughtCarsBeforeDate(beforeDate);
+
     return {
       updatedCars: (await updatedCars).map((car: Car) => car.toDTO()),
+      removedOwners: (await removedOwners).map((owner: Owner) => owner.toDTO()),
     };
   }
 
